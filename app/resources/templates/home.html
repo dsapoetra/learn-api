@@ -14,35 +14,6 @@
   </div>
 </div>
 <div class="row">
-  <div class="span12">
-    <form method="PUT" action="/transactionservice/transaction/1">
 
-      <p>
-        Amount:
-        <input class="form-control"
-               type="text"
-               name="amount" />
-      </p>
-      {% if errors.name %}
-      <div class="alert alert-danger">{{errors.name|join}}</div>
-      {% endif %}
-      <p>
-        Type:
-        <input class="form-control"
-               type="text"
-               name="type"/>
-      </p>
-      <p>
-        Parent ID:
-        <input class="form-control"
-               type="text"
-               name="pid"/>
-      </p>
-      {% if errors.message %}
-      <div class="alert alert-danger">{{errors.message|join}}</div>
-      {% endif %}
-      <input type="submit" class="btn btn-primary" value="submit" />
-    </form>
-  </div>
 </div>
 {% endblock %}
