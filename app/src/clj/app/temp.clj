@@ -10,7 +10,7 @@
            (future-cancel future#)
            nil)))))
 
-(defn kpk [x x1 y y1]
+(defn frogs [x x1 y y1]
   "Trying when recursive literally has no basis, so limit with time, this one, 20s"
   (let [res (with-timeout 20000
                           (loop [x x x1 x1 y y y1 y1]
@@ -22,7 +22,7 @@
       res)))
 
 
-(defn count-occurence [s]
+(defn count-char [s]
   (->>
     (partition-by identity s)
     (map #(do [(str (first %)) (count %)]))
