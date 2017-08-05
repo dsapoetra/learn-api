@@ -14,6 +14,9 @@
 (defn save-transaction [id body]
   (swap! data assoc id body))
 
+(defn get-transaction [id]
+  (get @data id))
+
 (defn get-transaction-by-type [])
 
 (defn get-sum-transaction-by-id [])
@@ -30,7 +33,7 @@
                                                                                            types (get-in req [:params :type])
                                                                                            parent-id (get-in req [:params :parent-id])]
                                                                                        (save-transaction transaction-id {:amount amount :type types :parent-id parent-id}))))
-           (GET "/transactionservice/transaction/:transaction-id" [] ())
+           (GET "/transactionservice/transaction/:transaction-id" [transaction-id] (r/response (str (get-transaction transaction-id))))
            (GET "/transactionservice/types/:type" [] ())
            (GET " /transactionservice/sum/:transaction-id" [] ())
            (GET "/about" [] (about-page)))
