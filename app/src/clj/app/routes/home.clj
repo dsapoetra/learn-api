@@ -15,11 +15,19 @@
   (swap! data assoc id body))
 
 (defn get-transaction [id]
-  (get @data id))
+  (dissoc (get @data id) :transaction-id))
 
-(defn get-transaction-by-type [])
+(defn get-transaction-id-by-type [type]
+  (let [data-processed (vals @data)]
+    (->> (filter #(= type (:type %)) data-processed)
+         (map #(:transaction-id %)))))
 
-(defn get-sum-transaction-by-id [])
+(defn get-sum-transaction-by-id [id]
+  {:sum (+
+           (:amount (get @data id )) (->> (vals @data)
+                                     (filter #(= (read-string id) (:parent-id %)))
+                                     (map #(:amount %))
+                                     (apply +')))})
 
 
 
@@ -32,9 +40,10 @@
                                                                                      (let [amount (get-in req [:params :amount])
                                                                                            types (get-in req [:params :type])
                                                                                            parent-id (get-in req [:params :parent-id])]
-                                                                                       (save-transaction transaction-id {:amount amount :type types :parent-id parent-id}))))
-           (GET "/transactionservice/transaction/:transaction-id" [transaction-id] (r/response (str (get-transaction transaction-id))))
-           (GET "/transactionservice/types/:type" [] ())
-           (GET " /transactionservice/sum/:transaction-id" [] ())
+                                                                                       (do (save-transaction transaction-id {:transaction-id transaction-id :amount amount :type types :parent-id parent-id})
+                                                                                           (r/response {:status "ok" })))))
+           (GET "/transactionservice/transaction/:transaction-id" [transaction-id] (r/response (get-transaction transaction-id)))
+           (GET "/transactionservice/types/:type" [type] (r/response (get-transaction-id-by-type type)))
+           (GET "/transactionservice/sum/:transaction-id" [transaction-id] (r/response (get-sum-transaction-by-id transaction-id)))
            (GET "/about" [] (about-page)))
 
